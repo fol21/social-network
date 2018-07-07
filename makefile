@@ -34,7 +34,7 @@ dirs: clean
 
 #### Clean project tasks ####
 clean:
-	rm -rf  *.o **/*.o out/* out/ obj/ include/ src/
+	rm -rf  *.o **/*.o out/* out/ obj/
   
 #### test gen tasks ####
 test.o: ${TEST_DIR}/teste.c 
