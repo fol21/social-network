@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <helpers.h>
+
 
 
 /** 
@@ -19,6 +21,7 @@ typedef struct AdjacencyListNode
  */
 typedef struct AdjacencyList 
 {
+    Person person;
     AdjacencyListNode *head; 
 }AdjacencyList;
  
@@ -35,10 +38,10 @@ typedef struct Graph
     struct AdjacencyList* array;
 }Graph;
 
-AdjacencyListNode* newAdjListNode(int dest);
-Graph* createGraph(int V);
-void addEdge( Graph* graph, int src, int dest);
-void printGraph( Graph* graph);
+AdjacencyListNode* new_AdjacencyListNode(int dest);
+Graph* create_Graph(int V, Person* persons);
+void add_Edge( Graph* graph, int src, int dest);
+void print_Graph( Graph* graph);
 
 
 #endif // !GRAPH_H

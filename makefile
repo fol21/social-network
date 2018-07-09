@@ -24,13 +24,13 @@ MAIN = main
 
 #### Project Build tasks ####
 
-all: clean dirs testeOnibus.o dadosOnibus.o helpers.o
-	make testeOnibus
+all: clean dirs ${MAIN}.o graph.o helpers.o
+	make ${MAIN}
 
 #### Project setup tasks ####
 
 dirs: clean
-	mkdir out/ obj/ include/ src/
+	mkdir out/ obj/
 
 #### Clean project tasks ####
 clean:
