@@ -41,6 +41,7 @@ typedef struct Graph
 AdjacencyListNode* new_AdjacencyListNode(int dest);
 Graph* create_Graph(int V, Person* persons);
 void add_Edge( Graph* graph, int src, int dest);
+Person map_dest_person(Graph* graph, int dest);
 void print_Graph( Graph* graph);
 
 

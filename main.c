@@ -35,18 +35,28 @@ int main(){
     }
     
     Graph* graph = create_Graph(n_vertices,persons);
-    print_Graph(graph);
 
     // Edges connection logic
+     for (int i = 0; i < n_vertices ; i++)
+    {
+        read = getline(&line, &len, fp);
+        name_age_pair = str_split(line,' ');
+        for (int j = 0; j < n_vertices; j++)
+        {
+            if(atoi(name_age_pair[j]))
+            {
+                add_Edge(graph,i,j);
+            }
+        }
+    }
+    print_Graph(graph);
 
+    fclose(fp);
 
     // while ((read = getline(&line, &len, fp)) != -1) {
     //     printf("Retrieved line of length %zu :\n", read);
     //     printf("%s", line);
     // }
-
-
-    fclose(fp);
     // const char* names[] = {"Maria","Bob","Ana"}; 
     // Graph* graph = create_Graph(3, names);
     // add_Edge(graph, 0,1);

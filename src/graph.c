@@ -50,11 +50,19 @@ void add_Edge( Graph* graph, int src, int dest)
     newNode->next = graph->array[src].head;
     graph->array[src].head = newNode;
  
-    // Since graph is undirected, add an edge from
-    // dest to src also
-    newNode = new_AdjacencyListNode(src);
-    newNode->next = graph->array[dest].head;
-    graph->array[dest].head = newNode;
+    // // Since graph is undirected, add an edge from
+    // // dest to src also
+    // newNode = new_AdjacencyListNode(src);
+    // newNode->next = graph->array[dest].head;
+    // graph->array[dest].head = newNode;
+}
+
+/**
+ * * Maps dest number with person from graph's AdjList
+ */
+Person map_dest_person(Graph* graph, int dest)
+{
+    return graph->array[dest].person;
 }
  
 /**
@@ -67,14 +75,15 @@ void print_Graph( Graph* graph)
     for (v = 0; v < graph->V; ++v)
     {
          AdjacencyListNode* pCrawl = graph->array[v].head;
-        printf("\n Adjacency list of vertex %d (id: %s %d)\n head ", 
+        printf("\n Adjacency list of vertex %d (id: %s %d)\n %s(head) ", 
             v, 
             graph->array[v].person.name,
-            graph->array[v].person.age
+            graph->array[v].person.age,
+            graph->array[v].person.name
         );
         while (pCrawl)
         {
-            printf("-> %d", pCrawl->dest);
+            printf("-> %s", map_dest_person(graph, pCrawl->dest).name);
             pCrawl = pCrawl->next;
         }
         printf("\n");
