@@ -89,3 +89,23 @@ void print_Graph( Graph* graph)
         printf("\n");
     }
 }
+/**
+ * * A utility function to print the average of edges 
+ * 
+ */
+double average_edges( Graph* graph)
+{
+    int v;
+    int count = 0;
+    for (v = 0; v < graph->V; ++v)
+    {
+        AdjacencyListNode* pCrawl = graph->array[v].head;
+        while (pCrawl)
+        {
+            count++;
+            pCrawl = pCrawl->next;
+        }
+    }
+    double avg = count/graph->V;
+    return avg;
+}

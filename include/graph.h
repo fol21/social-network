@@ -43,6 +43,7 @@ Graph* create_Graph(int V, Person* persons);
 void add_Edge( Graph* graph, int src, int dest);
 Person map_dest_person(Graph* graph, int dest);
 void print_Graph( Graph* graph);
+double average_edges( Graph* graph);
 
 
 #endif // !GRAPH_H
