@@ -63,7 +63,8 @@ void add_Edge(Graph* graph, int src, int dest)
 void remove_edge(Graph* graph, int src, int dest)
 {
     AdjacencyList newList;
-    newList.person = graph ->array[src].person;
+    newList.head = NULL;
+    newList.person = graph->array[src].person;
 
     AdjacencyListNode* pCrawl = graph->array[src].head;
 

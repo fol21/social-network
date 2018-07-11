@@ -87,10 +87,19 @@ void opt_write_txt_file(Graph* graph)
 {
     FILE* fp;
     char* filename;
-    char* mask = "0 0 0 0 0 0";
-    char* row = mask;
-    printf("Escolha nome do arquivo do grafo a ser lido :  ");
+
+    // Setup da matriz de adjacencias
+    char** rows = (char**)malloc(graph->V*sizeof(char*));
+    // for(int i= 0 ; i < graph->V;i++)
+    // {
+    //     rows[i] = (char*)malloc(2*graph->V*sizeof(char));
+    // }
+
+
+    printf("Escolha nome do arquivo do grafo a ser lido : \n ");
     scanf("%s",filename);
+    while ((getchar()) != '\n');
+
     
     fp = fopen(filename,"w");
     if(fp != NULL)
@@ -104,20 +113,22 @@ void opt_write_txt_file(Graph* graph)
             fprintf(fp,"%s %d\n", graph->array[i].person.name, graph->array[i].person.age);
             
         }
-        for(int i= 0 ; i < graph->V;i++)
-        {
-            //Matrix
-            row = mask;
-            AdjacencyListNode* pCrawl = graph->array[i].head;
-            while (pCrawl)
-            {
-                pCrawl = pCrawl->next;
-            }
-            fprintf(fp,"%s\n", row);
+        // for(int i= 0 ; i < graph->V;i++)
+        // {
+        //     //Matrix
+        //     AdjacencyListNode* pCrawl = graph->array[i].head;
+        //     while (pCrawl)
+        //     {
+        //         rows[i][2*pCrawl->dest] = '1';
+        //         rows[i][2*pCrawl->dest+1] = ' ';
+        //         pCrawl = pCrawl->next;
+        //     }
+        //     fprintf(fp,"%s\n", rows[i]);
 
-        }
+        // }
     
         //Wrapup
+        free(rows);
         fclose(fp);
         printf("\n Arquivo escrito em %s \n", filename);
     }
