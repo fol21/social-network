@@ -3,6 +3,7 @@
 #include<stdio.h>
 #define MAXIDSIZE 100
 
+
 void opt_adicionar_aresta(Graph* graph)
 {
     int scan;
@@ -22,10 +23,32 @@ void opt_adicionar_aresta(Graph* graph)
     } while (scan !=1);
     
     add_Edge(graph, src, dest);
+    add_Edge(graph, dest, src);
     print_Graph(graph);
 }
 
-void opt_remover_aresta(){}
+void opt_remover_aresta(Graph* graph)
+{
+    int scan;
+    int src;
+    int dest;
+    do
+	{
+		printf("Escolha Vértice de origem :\n");
+		scan = scanf("%d",&src);
+		while ((getchar()) != '\n');
+    } while (scan !=1);
+    do
+	{
+		printf("Escolha Vértice para ligar :\n");
+		scan = scanf("%d",&dest);
+		while ((getchar()) != '\n');
+    } while (scan !=1);
+    
+    remove_edge(graph, src, dest);
+    remove_edge(graph, dest, src);
+    print_Graph(graph);
+}
 
 void opt_pessoas_maior_idade(Graph* graph)
 {
@@ -60,6 +83,47 @@ void opt_calcula_media_arestas(Graph* graph)
     printf("Número médio de arestas -> %lf arestas \n", average_edges(graph));
 }
 
+void opt_write_txt_file(Graph* graph)
+{
+    FILE* fp;
+    char* filename;
+    char* mask = "0 0 0 0 0 0";
+    char* row = mask;
+    printf("Escolha nome do arquivo do grafo a ser lido :  ");
+    scanf("%s",filename);
+    
+    fp = fopen(filename,"w");
+    if(fp != NULL)
+    {
+        
+        //Numero de vertices
+        fprintf(fp,"%d\n",graph->V);
+        //Persons
+        for(int i= 0 ; i < graph->V;i++)
+        {
+            fprintf(fp,"%s %d\n", graph->array[i].person.name, graph->array[i].person.age);
+            
+        }
+        for(int i= 0 ; i < graph->V;i++)
+        {
+            //Matrix
+            row = mask;
+            AdjacencyListNode* pCrawl = graph->array[i].head;
+            while (pCrawl)
+            {
+                pCrawl = pCrawl->next;
+            }
+            fprintf(fp,"%s\n", row);
+
+        }
+    
+        //Wrapup
+        fclose(fp);
+        printf("\n Arquivo escrito em %s \n", filename);
+    }
+    else printf("Arquivo não pode ser criado.");
+}
+
 int main(){
     FILE *fp;
     char c;
@@ -67,9 +131,13 @@ int main(){
     char* line = NULL;
     int len = 0;
     int read;
-    char* filename = "graph.txt";
- 
+    char filename[50];
+    
+    //Read File
+    printf("Escolha nome do arquivo do grafo a ser lido :  ");
+    scanf("%s",filename);
     fp = fopen(filename, "r");
+    
     if (fp == NULL){
         printf("Could not open file %s",filename);
         return 1;
@@ -105,7 +173,10 @@ int main(){
             }
         }
     }
-    //print_Graph(graph);
+
+    // Grafico inicial
+    printf("/n ------ Mapeamento Inicial do grafo ------/n");
+    print_Graph(graph);
 
     fclose(fp);
 
@@ -139,42 +210,31 @@ int main(){
                 opt_adicionar_aresta(graph);
                 break;
             case 2:
-                printf("1. Adicionar Aresta \n");
-                opt_remover_aresta();
+                printf("2. Remover Aresta \n");
+                opt_remover_aresta(graph);
                 break;
             case 3:
-                printf("1. Adicionar Aresta \n");
+                printf("3. Buscar pessoas mais velhas que certa idade \n");
                 opt_pessoas_maior_idade(graph);
                 break;
             case 4:
-                printf("1. Adicionar Aresta \n");
+                printf("4. Calcular número médio de relações de amizade \n");
                 opt_calcula_media_arestas(graph);
                 break;
             case 5:
-                printf("1. Adicionar Aresta \n");
-                opt_adicionar_aresta(graph);
+                printf("5. Escrever arquivo do grafo \n");
+                opt_write_txt_file(graph);
                 break;
             case 6:
+                printf("\n Saindo...\n");
                 break;
 
         default:
-            printf("Selecione um número entre 1 e 6 !");
+            printf("Selecione um número entre 1 e 6 !\n");
             break;
         }
 
     }while(selection != 6);
 
-
-
-    // while ((read = getline(&line, &len, fp)) != -1) {
-    //     printf("Retrieved line of length %zu :\n", read);
-    //     printf("%s", line);
-    // }
-    // const char* names[] = {"Maria","Bob","Ana"}; 
-    // Graph* graph = create_Graph(3, names);
-    // add_Edge(graph, 0,1);
-    // add_Edge(graph, 0,2);
-    // add_Edge(graph, 1,2);
-    // print_Graph(graph);
     return 0;
 }

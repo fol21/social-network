@@ -39,14 +39,14 @@ Graph* create_Graph(int V, Person* persons)
 }
  
 /**
- * *  Adds an edge to an undirected graph
+ * *  Adds an edge to an undirected or directed graph
  */
-void add_Edge( Graph* graph, int src, int dest)
+void add_Edge(Graph* graph, int src, int dest)
 {
     // Add an edge from src to dest.  A new node is 
     // added to the adjacency list of src.  The node
     // is added at the begining
-     AdjacencyListNode* newNode = new_AdjacencyListNode(dest);
+    AdjacencyListNode* newNode = new_AdjacencyListNode(dest);
     newNode->next = graph->array[src].head;
     graph->array[src].head = newNode;
  
@@ -55,6 +55,29 @@ void add_Edge( Graph* graph, int src, int dest)
     // newNode = new_AdjacencyListNode(src);
     // newNode->next = graph->array[dest].head;
     // graph->array[dest].head = newNode;
+    
+    // Obs: You can also call this function twice 
+    // with src and dest inverted
+}
+
+void remove_edge(Graph* graph, int src, int dest)
+{
+    AdjacencyList newList;
+    newList.person = graph ->array[src].person;
+
+    AdjacencyListNode* pCrawl = graph->array[src].head;
+
+    while (pCrawl)
+    {
+        if(pCrawl->dest != dest)
+        {
+            AdjacencyListNode* newNode = new_AdjacencyListNode(pCrawl->dest);
+            newNode->next = newList.head;
+            newList.head = newNode;
+        }
+        pCrawl = pCrawl->next;
+    }
+    graph->array[src] = newList;
 }
 
 /**
