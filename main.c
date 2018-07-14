@@ -1,6 +1,7 @@
 #include<helpers.h>
 #include<graph.h>
 #include<stdio.h>
+#include<stdlib.h>
 #define MAXIDSIZE 100
 
 
@@ -86,17 +87,24 @@ void opt_calcula_media_arestas(Graph* graph)
 void opt_write_txt_file(Graph* graph)
 {
     FILE* fp;
-    char* filename;
+    char filename[50];
 
     // Setup da matriz de adjacencias
+    int size = 2*graph->V*sizeof(char)+1;
     char** rows = (char**)malloc(graph->V*sizeof(char*));
-    // for(int i= 0 ; i < graph->V;i++)
-    // {
-    //     rows[i] = (char*)malloc(2*graph->V*sizeof(char));
-    // }
+    for(int i= 0 ; i < graph->V;i++)
+    {
+        rows[i] = (char*)malloc(size);
+        for(int j=0; j < graph->V; j++)
+        {
+            rows[i][2*j] = '0';
+            rows[i][2*j+1] = ' ';
+        }
+    }
 
 
     printf("Escolha nome do arquivo do grafo a ser lido : \n ");
+    
     scanf("%s",filename);
     while ((getchar()) != '\n');
 
@@ -106,29 +114,31 @@ void opt_write_txt_file(Graph* graph)
     {
         
         //Numero de vertices
+        printf("%d\n",graph->V);
         fprintf(fp,"%d\n",graph->V);
         //Persons
         for(int i= 0 ; i < graph->V;i++)
         {
+            printf("%s %d\n", graph->array[i].person.name, graph->array[i].person.age);
             fprintf(fp,"%s %d\n", graph->array[i].person.name, graph->array[i].person.age);
             
         }
-        // for(int i= 0 ; i < graph->V;i++)
-        // {
-        //     //Matrix
-        //     AdjacencyListNode* pCrawl = graph->array[i].head;
-        //     while (pCrawl)
-        //     {
-        //         rows[i][2*pCrawl->dest] = '1';
-        //         rows[i][2*pCrawl->dest+1] = ' ';
-        //         pCrawl = pCrawl->next;
-        //     }
-        //     fprintf(fp,"%s\n", rows[i]);
+        for(int i= 0 ; i < graph->V;i++)
+        {
+            //Matrix
+            AdjacencyListNode* pCrawl = graph->array[i].head;
+            while (pCrawl)
+            {
+                rows[i][2*pCrawl->dest] = '1';
+                pCrawl = pCrawl->next;
+            }
+            rows[i][size-1] = '\0';
+            printf("%s\n", rows[i]);
+            fprintf(fp,"%s\n", rows[i]);
 
-        // }
+        }
     
         //Wrapup
-        free(rows);
         fclose(fp);
         printf("\n Arquivo escrito em %s \n", filename);
     }
