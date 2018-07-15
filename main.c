@@ -2,9 +2,126 @@
 #include<graph.h>
 #include<stdio.h>
 #include<stdlib.h>
+
 #define MAXIDSIZE 100
 
 
+int main(){
+    FILE *fp;
+    char c;
+    int i= 0;
+    char* line = NULL;
+    int len = 0;
+    int read;
+    char filename[50];
+    
+    //Read File
+    printf("Escolha nome do arquivo do grafo a ser lido :  ");
+    scanf("%s",filename);
+    fp = fopen(filename, "r");
+    
+    if (fp == NULL){
+        printf("Could not open file %s",filename);
+        return 1;
+    }
+
+    //Read Number of vertices
+    read = getline(&line, &len, fp);
+    int n_vertices = atoi(line);
+    Person* persons = create_person_array(n_vertices);
+
+    //Populate persons structures and AdjList array
+    char** name_age_pair;
+    for (int i = 0; i < n_vertices ; i++)
+    {
+        read = getline(&line, &len, fp);
+        name_age_pair = str_split(line,' ');// split string into array
+        persons[i].name = name_age_pair[0];
+        persons[i].age = atoi(name_age_pair[1]);
+    }
+    
+    Graph* graph = create_Graph(n_vertices,persons);
+
+    // Edges connection logic
+     for (int i = 0; i < n_vertices ; i++)
+    {
+        read = getline(&line, &len, fp);
+        name_age_pair = str_split(line,' ');
+        for (int j = 0; j < n_vertices; j++)
+        {
+            if(atoi(name_age_pair[j]))
+            {
+                add_Edge(graph,i,j);
+            }
+        }
+    }
+
+    // Grafico inicial
+    printf("/n ------ Mapeamento Inicial do grafo ------/n");
+    print_Graph(graph);
+
+    fclose(fp);
+
+    int selection = -1;
+    int scan;
+    
+    // Menu bar
+    do
+    {
+        // MENU para escolhar opção por número
+        printf("\n");
+        printf("--------- [REDE SOCIAL] ---------\n\n");
+        printf("Escreva o número da ação desejada:\n");
+        printf("1. Adicionar Aresta \n");
+        printf("2. Remover Aresta \n");
+        printf("3. Buscar pessoas mais velhas que certa idade \n");
+        printf("4. Calcular número médio de relações de amizade \n");
+        printf("5. Escrever arquivo do grafo \n");
+        printf("6. Sair \n");
+        printf(">> ");
+
+        scan = scanf("%d",&selection);
+        printf("\n");
+        while ((getchar()) != '\n');
+
+        // Lógica de decição baseado na seleção
+        switch (selection)
+        {
+            case 1:
+                printf("1. Adicionar Aresta \n");
+                opt_adicionar_aresta(graph);
+                break;
+            case 2:
+                printf("2. Remover Aresta \n");
+                opt_remover_aresta(graph);
+                break;
+            case 3:
+                printf("3. Buscar pessoas mais velhas que certa idade \n");
+                opt_pessoas_maior_idade(graph);
+                break;
+            case 4:
+                printf("4. Calcular número médio de relações de amizade \n");
+                opt_calcula_media_arestas(graph);
+                break;
+            case 5:
+                printf("5. Escrever arquivo do grafo \n");
+                opt_write_txt_file(graph);
+                break;
+            case 6:
+                printf("\n Saindo...\n");
+                break;
+
+        default:
+            printf("Selecione um número entre 1 e 6 !\n");
+            break;
+        }
+
+    }while(selection != 6);
+
+    return 0;
+}
+
+//Implementation of user actions
 void opt_adicionar_aresta(Graph* graph)
 {
     int scan;
@@ -90,6 +207,7 @@ void opt_write_txt_file(Graph* graph)
     char filename[50];
 
     // Setup da matriz de adjacencias
+    //Cria matriz de zeros
     int size = 2*graph->V*sizeof(char)+1;
     char** rows = (char**)malloc(graph->V*sizeof(char*));
     for(int i= 0 ; i < graph->V;i++)
@@ -143,119 +261,4 @@ void opt_write_txt_file(Graph* graph)
         printf("\n Arquivo escrito em %s \n", filename);
     }
     else printf("Arquivo não pode ser criado.");
-}
-
-int main(){
-    FILE *fp;
-    char c;
-    int i= 0;
-    char* line = NULL;
-    int len = 0;
-    int read;
-    char filename[50];
-    
-    //Read File
-    printf("Escolha nome do arquivo do grafo a ser lido :  ");
-    scanf("%s",filename);
-    fp = fopen(filename, "r");
-    
-    if (fp == NULL){
-        printf("Could not open file %s",filename);
-        return 1;
-    }
-
-    //Read Number of vertices
-    read = getline(&line, &len, fp);
-    int n_vertices = atoi(line);
-    Person* persons = create_person_array(n_vertices);
-
-    //Populate persons structures and AdjList array
-    char** name_age_pair;
-    for (int i = 0; i < n_vertices ; i++)
-    {
-        read = getline(&line, &len, fp);
-        name_age_pair = str_split(line,' ');
-        persons[i].name = name_age_pair[0];
-        persons[i].age = atoi(name_age_pair[1]);
-    }
-    
-    Graph* graph = create_Graph(n_vertices,persons);
-
-    // Edges connection logic
-     for (int i = 0; i < n_vertices ; i++)
-    {
-        read = getline(&line, &len, fp);
-        name_age_pair = str_split(line,' ');
-        for (int j = 0; j < n_vertices; j++)
-        {
-            if(atoi(name_age_pair[j]))
-            {
-                add_Edge(graph,i,j);
-            }
-        }
-    }
-
-    // Grafico inicial
-    printf("/n ------ Mapeamento Inicial do grafo ------/n");
-    print_Graph(graph);
-
-    fclose(fp);
-
-    int selection = -1;
-    int scan;
-    
-    // Menu bar
-    do
-    {
-        // MENU para escolhar opção por número
-        printf("\n");
-        printf("--------- [REDE SOCIAL] ---------\n\n");
-        printf("Escreva o número da ação desejada:\n");
-        printf("1. Adicionar Aresta \n");
-        printf("2. Remover Aresta \n");
-        printf("3. Buscar pessoas mais velhas que certa idade \n");
-        printf("4. Calcular número médio de relações de amizade \n");
-        printf("5. Escrever arquivo do grafo \n");
-        printf("6. Sair \n");
-        printf(">> ");
-
-        scan = scanf("%d",&selection);
-        printf("\n");
-        while ((getchar()) != '\n');
-
-        // Lógica de decição baseado na seleção
-        switch (selection)
-        {
-            case 1:
-                printf("1. Adicionar Aresta \n");
-                opt_adicionar_aresta(graph);
-                break;
-            case 2:
-                printf("2. Remover Aresta \n");
-                opt_remover_aresta(graph);
-                break;
-            case 3:
-                printf("3. Buscar pessoas mais velhas que certa idade \n");
-                opt_pessoas_maior_idade(graph);
-                break;
-            case 4:
-                printf("4. Calcular número médio de relações de amizade \n");
-                opt_calcula_media_arestas(graph);
-                break;
-            case 5:
-                printf("5. Escrever arquivo do grafo \n");
-                opt_write_txt_file(graph);
-                break;
-            case 6:
-                printf("\n Saindo...\n");
-                break;
-
-        default:
-            printf("Selecione um número entre 1 e 6 !\n");
-            break;
-        }
-
-    }while(selection != 6);
-
-    return 0;
 }

@@ -43,21 +43,38 @@ Graph* create_Graph(int V, Person* persons)
  */
 void add_Edge(Graph* graph, int src, int dest)
 {
-    // Add an edge from src to dest.  A new node is 
-    // added to the adjacency list of src.  The node
-    // is added at the begining
-    AdjacencyListNode* newNode = new_AdjacencyListNode(dest);
-    newNode->next = graph->array[src].head;
-    graph->array[src].head = newNode;
- 
-    // // Since graph is undirected, add an edge from
-    // // dest to src also
-    // newNode = new_AdjacencyListNode(src);
-    // newNode->next = graph->array[dest].head;
-    // graph->array[dest].head = newNode;
+    int hasEdge = 0;
+    AdjacencyListNode* pCrawl = graph->array[src].head;
+    while (pCrawl && !hasEdge)
+    {
+        if(pCrawl->dest == dest)
+        {
+            hasEdge = 1;
+        }
+        pCrawl = pCrawl->next;
+    }
+
+    if(!hasEdge)
+    {
+
+        // Add an edge from src to dest.  A new node is 
+        // added to the adjacency list of src.  The node
+        // is added at the begining
+        AdjacencyListNode* newNode = new_AdjacencyListNode(dest);
+        newNode->next = graph->array[src].head;
+        graph->array[src].head = newNode;
+
     
-    // Obs: You can also call this function twice 
-    // with src and dest inverted
+        // // Since graph is undirected, add an edge from
+        // // dest to src also
+        // newNode = new_AdjacencyListNode(src);
+        // newNode->next = graph->array[dest].head;
+        // graph->array[dest].head = newNode;
+
+        // Obs: You can also call this function twice 
+        // with src and dest inverted
+    }
+    else printf("\nEdge already exists in %d <-> %d !\n", src, dest);
 }
 
 void remove_edge(Graph* graph, int src, int dest)
